@@ -40,6 +40,14 @@ bool checkx(char a){
     }
 }
 
+bool checkdot(char a){
+    if(a == '.'){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 bool eos(int a, int b){
     if(b > a){
         return false;
@@ -62,8 +70,8 @@ double divide(string a){
     double Nu, De, Re;
     string inte;
     size_t found;
-    stringstream ss;
-    stringstream SS;
+    stringstream s1;
+    stringstream s2;
     bool main_loop = true;
 
     found = a.find("/",0);
@@ -72,25 +80,55 @@ double divide(string a){
             noint++;
         }
         inte = a.substr(found-(noint-1),noint-1);
-        ss << inte;
-        ss >> Nu;
+        s1 << inte;
+        s1 >> Nu;
         noint = 1;
         inte = "";
         while((checkint(a[found+noint]) || checksign(a[found+noint])) && eos1(found, noint, leng)){
             noint++;
         }
         inte = a.substr(found+1,noint-1);
-        SS << inte;
-        SS >> De;
+        s2 << inte;
+        s2 >> De;
     }
     Re = (Nu / De);
     return Re;
 }
 
+string bre(string a)
+{
+    int len = a.length();
+    int b = 0;
+    size_t fi;
+    while(b <= len){
+        fi = a.find("(",b);
+        if(fi != string::npos && checkint(a[fi-1])){
+            a[fi] = '*';
+        }
+        b++;
+    }
+    int c = 0;
+    size_t fn;
+    while(c <= len){
+        fn = a.find("(",c);
+        if(fn != string::npos){
+            a[fn] = ' ';
+        }
+        c++;
+    }
+    c = 0;
+    fn = 0;
+    while(c <= len){
+        fn = a.find(")",c);
+        if(fn != string::npos){
+            a[fn] = ' ';
+        }
+        c++;
+    }
+    return a;
+}
+
 int main()
 {
-    string f;
-    getline(cin,f);
-    cout << divide(f);
-    return 0;
+  return 0;
 }
