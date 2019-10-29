@@ -64,35 +64,84 @@ bool eos1(int fnd, int c, int len){
     }
 }
 
-double divide(string a){
-    int noint = 1;
+string divide(string a, int be, int af){
+    int h = 0;
     int leng = a.length();
     double Nu, De, Re;
-    string inte;
+    string inte, r1, r2 = "";
     size_t found;
     stringstream s1;
     stringstream s2;
-    bool main_loop = true;
-
-    found = a.find("/",0);
-    if(found != string::npos){
-        while((checkint(a[found-noint]) || checksign(a[found-noint])) && eos(found, noint)){
-            noint++;
-        }
-        inte = a.substr(found-(noint-1),noint-1);
-        s1 << inte;
-        s1 >> Nu;
-        noint = 1;
-        inte = "";
-        while((checkint(a[found+noint]) || checksign(a[found+noint])) && eos1(found, noint, leng)){
-            noint++;
-        }
-        inte = a.substr(found+1,noint-1);
-        s2 << inte;
-        s2 >> De;
-    }
+    stringstream s3;
+    found = (leng - af) - 1;
+    inte = a.substr(found-be,be);
+    s1 << inte;
+    s1 >> Nu;
+    inte = "";
+    inte = a.substr(found+1,af);
+    s2 << inte;
+    s2 >> De;
     Re = (Nu / De);
-    return Re;
+    s3 << Re;
+    s3 >> r1;
+    if(r1.length() < leng){
+        r2 += r1;
+        h = leng - r1.length();
+        for(int lo = 1 ; lo <= h ; lo++ ){
+            r2 += ' ';
+        }
+    }else if(r1.length() > leng){
+        r2 = r1.substr(0,leng);
+    }else{
+        r2 = r1;
+    }
+    return r2;
+}
+
+string div(string a)
+{
+    int b = 0, be, af, noint = 1, chr, cont = 0;
+    string frac, ans;
+    size_t found;
+    int len = a.length();
+    while(b < len){
+        found = a.find("/",b);
+        if(found == string::npos){
+            b = len;
+        }else{
+            while((checkint(a[found-noint]) || checkdot(a[found-noint]) || checkx(a[found-noint])) && eos(found, noint)){
+                noint++;
+            }
+            be = noint - 1;
+            noint = 1;
+            while((checkint(a[found+noint]) || checkdot(a[found+noint])) && eos1(found, noint, len)){
+                noint++;
+            }
+            af = noint - 1;
+            noint = 1;
+            if(a[found-1] == 'x'){
+                a[found-1] = '/';
+                found--;
+                for(int s = 1; s <= af; s++){
+                    a[found+s] = a[found+(s+1)];
+                }
+                a[found+af+1] = 'x';
+                be--;
+            }
+            chr = be+af+1;
+            frac = a.substr(found-be,chr);
+            ans = divide(frac,be,af);
+            for(int lo = 1; lo <= chr; lo++){
+                a[(found-be)+cont] = ans[lo-1];
+                cont++;
+            }
+            cont = 0;
+        }
+        if(found == string::npos){
+            b = len;
+        }
+    }
+    return sr(a);
 }
 
 string bre(string a)
@@ -125,10 +174,13 @@ string bre(string a)
         }
         c++;
     }
-    return a;
+    return sr(a);
 }
 
 int main()
 {
-  return 0;
+    string f;
+    getline(cin,f);
+    cout << div(f);
+    return 0;
 }
