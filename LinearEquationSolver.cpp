@@ -64,7 +64,7 @@ bool eos1(int fnd, int c, int len){
     }
 }
 
-string divide(string a, int be, int af){
+string op(string a, int be, int af){
     int h = 0;
     int leng = a.length();
     double Nu, De, Re;
@@ -81,7 +81,12 @@ string divide(string a, int be, int af){
     inte = a.substr(found+1,af);
     s2 << inte;
     s2 >> De;
-    Re = (Nu / De);
+    if(a[found] == '/'){
+        Re = (Nu / De);
+    }
+    if(a[found] == '*'){
+        Re = (Nu * De);
+    }
     s3 << Re;
     s3 >> r1;
     if(r1.length() < leng){
@@ -98,14 +103,14 @@ string divide(string a, int be, int af){
     return r2;
 }
 
-string div(string a)
+string operat(string a, char opr)
 {
     int b = 0, be, af, noint = 1, chr, cont = 0;
     string frac, ans;
     size_t found;
     int len = a.length();
     while(b < len){
-        found = a.find("/",b);
+        found = a.find(opr,b);
         if(found == string::npos){
             b = len;
         }else{
@@ -120,7 +125,7 @@ string div(string a)
             af = noint - 1;
             noint = 1;
             if(a[found-1] == 'x'){
-                a[found-1] = '/';
+                a[found-1] = opr;
                 found--;
                 for(int s = 1; s <= af; s++){
                     a[found+s] = a[found+(s+1)];
@@ -130,7 +135,7 @@ string div(string a)
             }
             chr = be+af+1;
             frac = a.substr(found-be,chr);
-            ans = divide(frac,be,af);
+            ans = op(frac,be,af);
             for(int lo = 1; lo <= chr; lo++){
                 a[(found-be)+cont] = ans[lo-1];
                 cont++;
@@ -179,8 +184,11 @@ string bre(string a)
 
 int main()
 {
-    string f;
-    getline(cin,f);
-    cout << div(f);
+    string f = "34x*2+35x/7=45";
+    string g;
+    cout << f  << endl;
+    g = operat(f,'/');
+    cout << g << endl;
+    cout << operat(g,'*') << endl;
     return 0;
 }
