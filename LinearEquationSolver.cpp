@@ -169,39 +169,6 @@ string operat(string a, char opr)
     return sr(a);
 }
 
-string bre(string a)
-{
-    int len = a.length();
-    int b = 0;
-    size_t fi;
-    while(b <= len){
-        fi = a.find("(",b);
-        if(fi != string::npos && checkint(a[fi-1])){
-            a[fi] = '*';
-        }
-        b++;
-    }
-    int c = 0;
-    size_t fn;
-    while(c <= len){
-        fn = a.find("(",c);
-        if(fn != string::npos){
-            a[fn] = ' ';
-        }
-        c++;
-    }
-    c = 0;
-    fn = 0;
-    while(c <= len){
-        fn = a.find(")",c);
-        if(fn != string::npos){
-            a[fn] = ' ';
-        }
-        c++;
-    }
-    return sr(a);
-}
-
 string sum(string a){
     int len = a.length(), b = 0 , c = 1 , noint = 1 , e = 0;
     float x[256], i[256], tx = 0, d = 0, ti = 0;
@@ -270,9 +237,21 @@ string sum(string a){
             }
             fi = intost(ti);
             if(fi[0] == '-'){
-                q = fx + fi;
+                if(fx[0] == '0'){
+                    q = fi;
+                }else{
+                    q = fx + fi;
+                }
             }else{
-                q = fx + '+' + fi;
+                if(fx[0] == '0'){
+                    q = fi;
+                }else if(fi[0] == '0'){
+                    q = fx;
+                }else if((fx[0] == '0') || (fi[0] == '0')){
+                    q = '0';
+                }else{
+                    q = fx + '+' + fi;
+                }
             }
             b = len + 1;
         }
@@ -290,16 +269,17 @@ string besum(string f){
     return f;
 }
 
+string solve(string a){
+    a = operat(a,'/');
+    a = operat(a,'*');
+    a = besum(a);
+    a = sum(a);
+    return a;
+}
+
 int main()
 {
-    string f = "4/2x+2*2x-4-2";
-    cout << f << endl;
-    f = operat(f,'/');
-    cout << f << endl;
-    f = operat(f, '*');
-    cout << f << endl;
-    f = besum(f);
-    f = sum(f);
-    cout << f << endl;
+    string f = "2*2x+1x/2";
+    cout << solve(f) << endl;
     return 0;
 }
